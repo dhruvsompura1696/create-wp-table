@@ -37,8 +37,10 @@ class My_List_Table extends WP_List_Table {
         global $wpdb;
         $user_table = $wpdb->prefix.'users';
         $login_table = $wpdb->prefix.'neca_user_login_activity';
-
-        $login_activities = $wpdb->get_results("SELECT  *,count(login.id) as total_login_count FROM $user_table as user LEFT JOIN $login_table as login ON user.ID = login.user_id GROUP BY user.ID ORDER BY total_login_count DESC, user.user_login ASC",ARRAY_A);
+        // echo "<pre>";
+        // print_r($_GET);
+        // echo "</pre>";
+        $login_activities = $wpdb->get_results("SELECT  *,count(login.id) as total_login_count FROM $user_table as user LEFT JOIN $login_table as login ON user.ID = login.user_id WHERE user.user_login LIKE '%".$_GET['s']."%' GROUP BY user.ID ORDER BY total_login_count DESC, user.user_login ASC",ARRAY_A);
 
         return $login_activities;
     }
@@ -179,7 +181,7 @@ echo '<div class="wrap"><h2>Users Login Frequancy</h2><hr/>';
     </style>
 <?php
 
-echo '<form method="post" style="clear: both;">';
+echo '<form method="GET" style="clear: both;">';
 echo '<input type="hidden" name="page" value="login-frequancy" />';
 $myListTable->prepare_items(); 
 $myListTable->display(); 
